@@ -8,7 +8,7 @@ namespace Pure_Zote
 {
     public class Pure_Zote : Mod
     {
-        private GameObject minion;
+        private GameObject minionTemplate;
         public Pure_Zote() : base("Pure Zote") { }
         public override string GetVersion() => "1.0";
         public override List<(string, string)> GetPreloadNames()
@@ -22,7 +22,7 @@ namespace Pure_Zote
         {
             Log("Initializing.");
             On.PlayMakerFSM.OnEnable += PlayMakerFSMOnEnable;
-            minion = preloadedObjects["Deepnest_East_07"]["Super Spitter"];
+            minionTemplate = preloadedObjects["Deepnest_East_07"]["Super Spitter"];
             UnityEngine.SceneManagement.SceneManager.activeSceneChanged += ActiveSceneChanged;
             ModHooks.HeroUpdateHook += HeroUpdateHook;
             Log("Initialized.");
@@ -33,10 +33,23 @@ namespace Pure_Zote
             if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Grey Prince" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM.");
-                FsmUtil.AddMethod(fsm, "Spit L", () => { Log("Spit L"); });
-                FsmUtil.AddMethod(fsm, "Spit R", () => { Log("Spit R"); });
+                FsmUtil.RemoveAction(fsm, "Spit L", 7);
+                FsmUtil.AddMethod(fsm, "Spit L", Spit, fsm);
+                FsmUtil.RemoveAction(fsm, "Spit R", 7);
+                FsmUtil.AddMethod(fsm, "Spit R", Spit, fsm);
                 Log("Upgraded FSM.");
             }
+        }
+        private void Spit(PlayMakerFSM fsm)
+        {
+            Log("Spitting.");
+            var zoteling = FsmUtil.FindFsmGameObjectVariable(fsm, "Zoteling").Value;
+            GameObject minion = GameObject.Instantiate(minionTemplate);
+            minion.SetActive(true);
+            minion.SetActiveChildren(true);
+            minion.GetComponent<HealthManager>().hp = 26;
+            minion.transform.position = zoteling.transform.position;
+            Log("Spat.");
         }
         private void ActiveSceneChanged(UnityEngine.SceneManagement.Scene from, UnityEngine.SceneManagement.Scene to)
         {
