@@ -48,7 +48,7 @@ namespace Pure_Zote
             GameObject minion = GameObject.Instantiate(minionTemplate);
             minion.SetActive(true);
             minion.SetActiveChildren(true);
-            minion.GetComponent<HealthManager>().hp = 26;
+            minion.GetComponent<HealthManager>().hp = 52;
             minion.transform.position = zoteling.transform.position;
             Log("Spat.");
         }
