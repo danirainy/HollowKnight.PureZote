@@ -23,6 +23,7 @@ namespace Pure_Zote
             Log("Initializing.");
             On.PlayMakerFSM.OnEnable += PlayMakerFSMOnEnable;
             minionTemplate = preloadedObjects["Deepnest_East_07"]["Super Spitter"];
+            UnityEngine.Object.Destroy(minionTemplate.GetComponent<PersistentBoolItem>());
             UnityEngine.SceneManagement.SceneManager.activeSceneChanged += ActiveSceneChanged;
             ModHooks.HeroUpdateHook += HeroUpdateHook;
             Log("Initialized.");
