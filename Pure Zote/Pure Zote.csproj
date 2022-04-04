@@ -8,11 +8,11 @@
     <!--<DocumentationFile>$(OutputPath)/$(AssemblyTitle).xml</DocumentationFile>-->
   </PropertyGroup>
   <PropertyGroup>
-    <RootNamespace>Pure_Zote</RootNamespace>
-    <AssemblyName>Pure_Zote</AssemblyName>
+    <RootNamespace>PureZote</RootNamespace>
+    <AssemblyName>PureZote</AssemblyName>
     <TargetFramework>net472</TargetFramework>
-    <AssemblyTitle>Pure_Zote</AssemblyTitle>
-    <Product>Pure_Zote</Product>
+    <AssemblyTitle>PureZote</AssemblyTitle>
+    <Product>PureZote</Product>
     <Description>A Hollow Knight Mod</Description>
     <Copyright>Copyright ©  2022</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>

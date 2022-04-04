@@ -19,3 +19,5 @@ https://discord.com/channels/879125729936298015/
 https://prashantmohta.github.io/ModdingDocs/
 
 https://github.com/nesrak1/FSMViewAvalonia
+
+https://github.com/sinai-dev/UnityExplorer
