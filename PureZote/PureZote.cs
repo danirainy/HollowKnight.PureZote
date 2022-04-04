@@ -10,7 +10,7 @@ namespace PureZote
     {
         private readonly List<GameObject> minionPrefabs = new();
         private readonly System.Random random = new();
-        public PureZote() : base("Pure Zote") { }
+        public PureZote() : base("PureZote") { }
         public override string GetVersion() => "1.0";
         public override List<(string, string)> GetPreloadNames()
         {
