@@ -67,7 +67,7 @@ namespace PureZote
             Log("Spitting.");
             var zoteling = FsmUtil.FindFsmGameObjectVariable(fsm, "Zoteling").Value;
             var index = random.Next(minionPrefabs.Count);
-            var minion = GameObject.Instantiate(minionPrefabs[index]);
+            var minion = Object.Instantiate(minionPrefabs[index]);
             minion.SetActive(true);
             minion.SetActiveChildren(true);
             minion.GetComponent<HealthManager>().hp = 52;
