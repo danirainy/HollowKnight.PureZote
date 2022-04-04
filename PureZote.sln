@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pure Zote", "Pure Zote\Pure Zote.csproj", "{DA878A3A-FAD0-4B5F-919C-2D36197E524B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureZote", "PureZote\PureZote.csproj", "{DA878A3A-FAD0-4B5F-919C-2D36197E524B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
