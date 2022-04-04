@@ -6,11 +6,18 @@ using Core.FsmUtil;
 
 namespace PureZote
 {
-    public class PureZote : Mod
+    public class Settings
     {
+        public bool enabled = true;
+    }
+    public class PureZote : Mod, IGlobalSettings<Settings>
+    {
+        private Settings settings_ = new();
         private readonly List<GameObject> minionPrefabs = new();
         private readonly System.Random random = new();
         public PureZote() : base("PureZote") { }
+        public void OnLoadGlobal(Settings settings) => settings_ = settings;
+        public Settings OnSaveGlobal() => settings_;
         public override string GetVersion() => "1.0";
         public override List<(string, string)> GetPreloadNames()
         {
@@ -37,6 +44,14 @@ namespace PureZote
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
             Log("Initializing.");
+            if (settings_.enabled)
+            {
+                Log("Enabled.");
+            }
+            else
+            {
+                Log("Disabled.");
+            }
             On.PlayMakerFSM.OnEnable += PlayMakerFSMOnEnable;
             LoadMinionPrefabs(preloadedObjects);
             UnityEngine.SceneManagement.SceneManager.activeSceneChanged += ActiveSceneChanged;
@@ -46,6 +61,10 @@ namespace PureZote
         private void PlayMakerFSMOnEnable(On.PlayMakerFSM.orig_OnEnable original, PlayMakerFSM fsm)
         {
             original(fsm);
+            if (!settings_.enabled)
+            {
+                return;
+            }
             if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Grey Prince" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
@@ -58,7 +77,9 @@ namespace PureZote
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Crew Tall(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                Common.LogFSM(this, fsm);
+                FsmUtil.AddFsmTransition(fsm, "Dormant", "FINISHED", "Multiply");
+                for (int i = 0; i < 2; ++i)
+                    FsmUtil.RemoveAction(fsm, "Spawn Antic", 0);
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
         }
@@ -76,7 +97,7 @@ namespace PureZote
         }
         private void ActiveSceneChanged(UnityEngine.SceneManagement.Scene from, UnityEngine.SceneManagement.Scene to)
         {
-            Log("Scene loaed: " + to.name + ".");
+            Log("Scene loaded: " + to.name + ".");
         }
         private void HeroUpdateHook()
         {
