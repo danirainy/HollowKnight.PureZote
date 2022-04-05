@@ -40,25 +40,23 @@ namespace PureZote
             var battleControl = preloadedObjects["GG_Mighty_Zote"]["Battle Control"];
             var names = new List<(string, string)>
             {
-                //("Tall Zotes", "Zote Crew Tall"),
-                //("Fat Zotes", "Zote Crew Fat (1)"),
-                //("Dormant Warriors", "Zote Crew Normal (1)"),
-                //("Zotelings", "Ordeal Zoteling"),
-                //("Zotelings", "Ordeal Zoteling"),
-                //("Zote Salubra",""),
+                ("Tall Zotes", "Zote Crew Tall"),
+                ("Fat Zotes", "Zote Crew Fat (1)"),
+                ("Dormant Warriors", "Zote Crew Normal (1)"),
+                ("Zotelings", "Ordeal Zoteling"),
+                ("Zotelings", "Ordeal Zoteling"),
+                ("Zote Salubra",""),
                 ("Zote Fluke",""),
-                //("Zote Thwomp","")
             };
             minionPrefabSettings = new List<MinionPrefabSettings>
             {
-                //new MinionPrefabSettings(),
-                //new MinionPrefabSettings(),
-                //new MinionPrefabSettings(),
-                //new MinionPrefabSettings(),
-                //new MinionPrefabSettings(),
-                //new MinionPrefabSettings(false),
                 new MinionPrefabSettings(),
-                //new MinionPrefabSettings(),
+                new MinionPrefabSettings(),
+                new MinionPrefabSettings(),
+                new MinionPrefabSettings(),
+                new MinionPrefabSettings(),
+                new MinionPrefabSettings(false),
+                new MinionPrefabSettings(false),
             };
             foreach ((string group, string instance) in names)
             {
