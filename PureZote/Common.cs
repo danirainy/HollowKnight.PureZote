@@ -13,7 +13,7 @@ namespace PureZote
             {
                 FsmUtil.InsertMethod(fsm, state.Name, () =>
                 {
-                    mod.Log(fsm.gameObject.name + " - " + fsm.FsmName + " entering " + state.Name + ".");
+                    mod.Log("FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + " entering " + "State: " + state.Name + ".");
                 }, 0);
             }
             mod.Log("Added Logging to FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");

@@ -31,12 +31,14 @@ namespace PureZote
             var battleControl = preloadedObjects["GG_Mighty_Zote"]["Battle Control"];
             var names = new List<(string, string)>
             {
-                ("Tall Zotes","Zote Crew Tall"),
+                //("Tall Zotes","Zote Crew Tall"),
+                ("Fat Zotes","Zote Crew Fat (1)"),
             };
             foreach ((string group, string instance) in names)
             {
                 var minion = battleControl.transform.Find(group).gameObject.transform.Find(instance).gameObject;
                 Object.Destroy(minion.GetComponent<PersistentBoolItem>());
+                Object.Destroy(minion.GetComponent<ConstrainPosition>());
                 minionPrefabs.Add(minion);
                 Log("Minion added: " + minion.name + ".");
             }
@@ -78,8 +80,33 @@ namespace PureZote
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
                 FsmUtil.AddFsmTransition(fsm, "Dormant", "FINISHED", "Multiply");
-                for (int i = 0; i < 2; ++i)
-                    FsmUtil.RemoveAction(fsm, "Spawn Antic", 0);
+                FsmUtil.RemoveAction(fsm, "Spawn Antic", 1);
+                FsmUtil.RemoveAction(fsm, "Spawn Antic", 3);
+                FsmUtil.AddMethod(fsm, "Spawn Antic", () => { fsm.SendEvent("FINISHED"); });
+                Common.LogFSM(this, fsm);
+                Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+            }else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Crew Fat (1)(Clone)" && fsm.FsmName == "Control")
+            {
+                Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+                FsmUtil.AddFsmTransition(fsm, "Dormant", "FINISHED", "Multiply");
+                FsmUtil.RemoveAction(fsm, "Spawn Antic", 1);
+                FsmUtil.RemoveAction(fsm, "Spawn Antic", 3);
+                FsmUtil.RemoveAction(fsm, "Spawn Antic", 5);
+                FsmUtil.AddMethod(fsm, "Spawn Antic", () => { fsm.SendEvent("FINISHED"); });
+                FsmUtil.RemoveAction(fsm, "Dr", 1);
+                FsmUtil.AddMethod(fsm, "Dr", () =>
+                {
+                    Log(fsm.gameObject.transform.position.x.ToString() + " vs " + HeroController.instance.transform.position.x);
+                    if (fsm.gameObject.transform.position.x < HeroController.instance.transform.position.x)
+                    {
+                        fsm.SendEvent("R");
+                    }
+                    else
+                    {
+                        fsm.SendEvent("L");
+                    }
+                });
+                Common.LogFSM(this, fsm);
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
         }
@@ -93,6 +120,7 @@ namespace PureZote
             minion.SetActiveChildren(true);
             minion.GetComponent<HealthManager>().hp = 52;
             minion.transform.position = zoteling.transform.position;
+            minion.GetComponent<Rigidbody2D>().velocity=zoteling.GetComponent<Rigidbody2D>().velocity;
             Log("Spat.");
         }
         private void ActiveSceneChanged(UnityEngine.SceneManagement.Scene from, UnityEngine.SceneManagement.Scene to)
