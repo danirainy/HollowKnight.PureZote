@@ -102,6 +102,7 @@ namespace PureZote
             if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Grey Prince" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+                FsmUtil.RemoveAction(fsm, "Spit Antic", 3);
                 FsmUtil.RemoveAction(fsm, "Spit L", 7);
                 FsmUtil.AddMethod(fsm, "Spit L", Spit, fsm);
                 FsmUtil.RemoveAction(fsm, "Spit R", 7);
