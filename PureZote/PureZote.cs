@@ -165,10 +165,11 @@ namespace PureZote
                 FsmUtil.RemoveAction(fsm, "Appear", 3);
                 FsmUtil.RemoveAction(fsm, "Idle", 0);
                 FsmUtil.RemoveAction(fsm, "Idle", 0);
-                var ghostMovement = (HutongGames.PlayMaker.Actions.GhostMovement)FsmUtil.GetState(fsm, "Sucking").ActiveActions[8];
+                var ghostMovement = FsmUtil.GetAction<HutongGames.PlayMaker.Actions.GhostMovement>(fsm, "Sucking", 8);
                 ghostMovement.xPosMin = 6;
                 ghostMovement.xPosMax = 47;
-                FsmUtil.GetState(fsm, "Sucking").ActiveActions[8] = ghostMovement;
+                FsmUtil.RemoveAction(fsm, "Sucking", 8);
+                FsmUtil.InsertAction(fsm, "Sucking", ghostMovement, 8);
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Fluke(Clone)" && fsm.FsmName == "Control")
