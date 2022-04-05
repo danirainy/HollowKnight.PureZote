@@ -10,10 +10,19 @@ namespace PureZote
     {
         public bool enabled = true;
     }
+    public class MinionPrefabSettings
+    {
+        public MinionPrefabSettings(bool enableSpittingVelocity = true)
+        {
+            enableSpittingVelocity_ = enableSpittingVelocity;
+        }
+        public bool enableSpittingVelocity_;
+    }
     public class PureZote : Mod, IGlobalSettings<Settings>
     {
         private Settings settings_ = new();
         private readonly List<GameObject> minionPrefabs = new();
+        private List<MinionPrefabSettings> minionPrefabSettings;
         private readonly System.Random random = new();
         public PureZote() : base("PureZote") { }
         public void OnLoadGlobal(Settings settings) => settings_ = settings;
@@ -31,12 +40,37 @@ namespace PureZote
             var battleControl = preloadedObjects["GG_Mighty_Zote"]["Battle Control"];
             var names = new List<(string, string)>
             {
-                //("Tall Zotes","Zote Crew Tall"),
-                ("Fat Zotes","Zote Crew Fat (1)"),
+                //("Tall Zotes", "Zote Crew Tall"),
+                //("Fat Zotes", "Zote Crew Fat (1)"),
+                //("Dormant Warriors", "Zote Crew Normal (1)"),
+                //("Zotelings", "Ordeal Zoteling"),
+                //("Zotelings", "Ordeal Zoteling"),
+                //("Zote Salubra",""),
+                ("Zote Fluke",""),
+                //("Zote Thwomp","")
+            };
+            minionPrefabSettings = new List<MinionPrefabSettings>
+            {
+                //new MinionPrefabSettings(),
+                //new MinionPrefabSettings(),
+                //new MinionPrefabSettings(),
+                //new MinionPrefabSettings(),
+                //new MinionPrefabSettings(),
+                //new MinionPrefabSettings(false),
+                new MinionPrefabSettings(),
+                //new MinionPrefabSettings(),
             };
             foreach ((string group, string instance) in names)
             {
-                var minion = battleControl.transform.Find(group).gameObject.transform.Find(instance).gameObject;
+                GameObject minion;
+                if (instance != "")
+                {
+                    minion = battleControl.transform.Find(group).gameObject.transform.Find(instance).gameObject;
+                }
+                else
+                {
+                    minion = battleControl.transform.Find(group).gameObject;
+                }
                 Object.Destroy(minion.GetComponent<PersistentBoolItem>());
                 Object.Destroy(minion.GetComponent<ConstrainPosition>());
                 minionPrefabs.Add(minion);
@@ -83,9 +117,10 @@ namespace PureZote
                 FsmUtil.RemoveAction(fsm, "Spawn Antic", 1);
                 FsmUtil.RemoveAction(fsm, "Spawn Antic", 3);
                 FsmUtil.AddMethod(fsm, "Spawn Antic", () => { fsm.SendEvent("FINISHED"); });
-                Common.LogFSM(this, fsm);
+                FsmUtil.RemoveAction(fsm, "Tumble Out", 2);
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-            }else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Crew Fat (1)(Clone)" && fsm.FsmName == "Control")
+            }
+            else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Crew Fat (1)(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
                 FsmUtil.AddFsmTransition(fsm, "Dormant", "FINISHED", "Multiply");
@@ -93,10 +128,10 @@ namespace PureZote
                 FsmUtil.RemoveAction(fsm, "Spawn Antic", 3);
                 FsmUtil.RemoveAction(fsm, "Spawn Antic", 5);
                 FsmUtil.AddMethod(fsm, "Spawn Antic", () => { fsm.SendEvent("FINISHED"); });
+                FsmUtil.RemoveAction(fsm, "Tumble Out", 2);
                 FsmUtil.RemoveAction(fsm, "Dr", 1);
                 FsmUtil.AddMethod(fsm, "Dr", () =>
                 {
-                    Log(fsm.gameObject.transform.position.x.ToString() + " vs " + HeroController.instance.transform.position.x);
                     if (fsm.gameObject.transform.position.x < HeroController.instance.transform.position.x)
                     {
                         fsm.SendEvent("R");
@@ -106,7 +141,43 @@ namespace PureZote
                         fsm.SendEvent("L");
                     }
                 });
-                Common.LogFSM(this, fsm);
+                Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+            }
+            else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Crew Normal (1)(Clone)" && fsm.FsmName == "Control")
+            {
+                Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+                FsmUtil.AddFsmTransition(fsm, "Dormant", "FINISHED", "Multiply");
+                FsmUtil.RemoveAction(fsm, "Spawn Antic", 1);
+                FsmUtil.RemoveAction(fsm, "Spawn Antic", 3);
+                FsmUtil.AddMethod(fsm, "Spawn Antic", () => { fsm.SendEvent("FINISHED"); });
+                FsmUtil.RemoveAction(fsm, "Tumble Out", 2);
+                Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+            }
+            else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Ordeal Zoteling(Clone)" && fsm.FsmName == "Control")
+            {
+                Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+                FsmUtil.AddFsmTransition(fsm, "Dormant", "FINISHED", "Ball");
+                FsmUtil.RemoveAction(fsm, "Ball", 2);
+                Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+            }
+            else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Salubra(Clone)" && fsm.FsmName == "Control")
+            {
+                Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+                FsmUtil.AddFsmTransition(fsm, "Dormant", "FINISHED", "Appear");
+                FsmUtil.RemoveAction(fsm, "Appear", 3);
+                FsmUtil.RemoveAction(fsm, "Idle", 0);
+                FsmUtil.RemoveAction(fsm, "Idle", 0);
+                var ghostMovement = (HutongGames.PlayMaker.Actions.GhostMovement)FsmUtil.GetState(fsm, "Sucking").ActiveActions[8];
+                ghostMovement.xPosMin = 6;
+                ghostMovement.xPosMax = 47;
+                FsmUtil.GetState(fsm, "Sucking").ActiveActions[8] = ghostMovement;
+                Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+            }
+            else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Fluke(Clone)" && fsm.FsmName == "Control")
+            {
+                Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+                FsmUtil.AddFsmTransition(fsm, "Dormant", "FINISHED", "Pos");
+                FsmUtil.RemoveAction(fsm, "Pos", 3);
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
         }
@@ -114,13 +185,17 @@ namespace PureZote
         {
             Log("Spitting.");
             var zoteling = FsmUtil.FindFsmGameObjectVariable(fsm, "Zoteling").Value;
+            zoteling.GetComponent<Renderer>().enabled = false;
             var index = random.Next(minionPrefabs.Count);
             var minion = Object.Instantiate(minionPrefabs[index]);
+            var settings = minionPrefabSettings[index];
             minion.SetActive(true);
             minion.SetActiveChildren(true);
-            minion.GetComponent<HealthManager>().hp = 52;
             minion.transform.position = zoteling.transform.position;
-            minion.GetComponent<Rigidbody2D>().velocity=zoteling.GetComponent<Rigidbody2D>().velocity;
+            if (settings.enableSpittingVelocity_)
+            {
+                minion.GetComponent<Rigidbody2D>().velocity = zoteling.GetComponent<Rigidbody2D>().velocity;
+            }
             Log("Spat.");
         }
         private void ActiveSceneChanged(UnityEngine.SceneManagement.Scene from, UnityEngine.SceneManagement.Scene to)
