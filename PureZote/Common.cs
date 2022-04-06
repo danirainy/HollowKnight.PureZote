@@ -1,4 +1,4 @@
-﻿using Core.FsmUtil;
+﻿using Satchel;
 using Modding;
 
 
@@ -11,9 +11,9 @@ namespace PureZote
             mod.Log("Adding Logging to FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             foreach (var state in fsm.FsmStates)
             {
-                FsmUtil.InsertMethod(fsm, state.Name, () =>
+                FsmUtil.InsertCustomAction(fsm, state.Name, () =>
                 {
-                    mod.Log("FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + " entering " + "State: " + state.Name + ".");
+                    mod.Log("FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + " entering " + "state: " + state.Name + ".");
                 }, 0);
             }
             mod.Log("Added Logging to FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");

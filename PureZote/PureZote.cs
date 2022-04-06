@@ -1,7 +1,7 @@
 ﻿using Modding;
 using System.Collections.Generic;
 using UnityEngine;
-using Core.FsmUtil;
+using Satchel;
 
 
 namespace PureZote
@@ -104,32 +104,32 @@ namespace PureZote
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
                 FsmUtil.RemoveAction(fsm, "Spit Antic", 3);
                 FsmUtil.RemoveAction(fsm, "Spit L", 7);
-                FsmUtil.AddMethod(fsm, "Spit L", Spit, fsm);
+                FsmUtil.AddCustomAction(fsm, "Spit L", () => Spit(fsm));
                 FsmUtil.RemoveAction(fsm, "Spit R", 7);
-                FsmUtil.AddMethod(fsm, "Spit R", Spit, fsm);
+                FsmUtil.AddCustomAction(fsm, "Spit R", () => Spit(fsm));
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Crew Tall(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                FsmUtil.AddFsmTransition(fsm, "Dormant", "FINISHED", "Multiply");
+                FsmUtil.AddTransition(fsm, "Dormant", "FINISHED", "Multiply");
                 FsmUtil.RemoveAction(fsm, "Spawn Antic", 1);
                 FsmUtil.RemoveAction(fsm, "Spawn Antic", 3);
-                FsmUtil.AddMethod(fsm, "Spawn Antic", () => { fsm.SendEvent("FINISHED"); });
+                FsmUtil.AddCustomAction(fsm, "Spawn Antic", () => { fsm.SendEvent("FINISHED"); });
                 FsmUtil.RemoveAction(fsm, "Tumble Out", 2);
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Crew Fat (1)(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                FsmUtil.AddFsmTransition(fsm, "Dormant", "FINISHED", "Multiply");
+                FsmUtil.AddTransition(fsm, "Dormant", "FINISHED", "Multiply");
                 FsmUtil.RemoveAction(fsm, "Spawn Antic", 1);
                 FsmUtil.RemoveAction(fsm, "Spawn Antic", 3);
                 FsmUtil.RemoveAction(fsm, "Spawn Antic", 5);
-                FsmUtil.AddMethod(fsm, "Spawn Antic", () => { fsm.SendEvent("FINISHED"); });
+                FsmUtil.AddCustomAction(fsm, "Spawn Antic", () => { fsm.SendEvent("FINISHED"); });
                 FsmUtil.RemoveAction(fsm, "Tumble Out", 2);
                 FsmUtil.RemoveAction(fsm, "Dr", 1);
-                FsmUtil.AddMethod(fsm, "Dr", () =>
+                FsmUtil.AddCustomAction(fsm, "Dr", () =>
                 {
                     if (fsm.gameObject.transform.position.x < HeroController.instance.transform.position.x)
                     {
@@ -145,24 +145,24 @@ namespace PureZote
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Crew Normal (1)(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                FsmUtil.AddFsmTransition(fsm, "Dormant", "FINISHED", "Multiply");
+                FsmUtil.AddTransition(fsm, "Dormant", "FINISHED", "Multiply");
                 FsmUtil.RemoveAction(fsm, "Spawn Antic", 1);
                 FsmUtil.RemoveAction(fsm, "Spawn Antic", 3);
-                FsmUtil.AddMethod(fsm, "Spawn Antic", () => { fsm.SendEvent("FINISHED"); });
+                FsmUtil.AddCustomAction(fsm, "Spawn Antic", () => { fsm.SendEvent("FINISHED"); });
                 FsmUtil.RemoveAction(fsm, "Tumble Out", 2);
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Ordeal Zoteling(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                FsmUtil.AddFsmTransition(fsm, "Dormant", "FINISHED", "Ball");
+                FsmUtil.AddTransition(fsm, "Dormant", "FINISHED", "Ball");
                 FsmUtil.RemoveAction(fsm, "Ball", 2);
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Salubra(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                FsmUtil.AddFsmTransition(fsm, "Dormant", "FINISHED", "Appear");
+                FsmUtil.AddTransition(fsm, "Dormant", "FINISHED", "Appear");
                 FsmUtil.RemoveAction(fsm, "Appear", 3);
                 FsmUtil.RemoveAction(fsm, "Idle", 0);
                 FsmUtil.RemoveAction(fsm, "Idle", 0);
@@ -176,7 +176,7 @@ namespace PureZote
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Fluke(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                FsmUtil.AddFsmTransition(fsm, "Dormant", "FINISHED", "Pos");
+                FsmUtil.AddTransition(fsm, "Dormant", "FINISHED", "Pos");
                 FsmUtil.RemoveAction(fsm, "Pos", 3);
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
@@ -184,7 +184,7 @@ namespace PureZote
         private void Spit(PlayMakerFSM fsm)
         {
             Log("Spitting.");
-            var zoteling = FsmUtil.FindFsmGameObjectVariable(fsm, "Zoteling").Value;
+            var zoteling = fsm.FsmVariables.FindFsmGameObject("Zoteling").Value;
             zoteling.GetComponent<Renderer>().enabled = false;
             var index = random.Next(minionPrefabs.Count);
             var minion = Object.Instantiate(minionPrefabs[index]);
@@ -204,6 +204,12 @@ namespace PureZote
         }
         private void HeroUpdateHook()
         {
+            if (Input.GetKeyDown(KeyCode.F2))
+            {
+                Log("Force loading scene GG_Grey_Prince_Zote.");
+                UnityEngine.SceneManagement.SceneManager.LoadScene("GG_Grey_Prince_Zote");
+                Log("Force loaded scene GG_Grey_Prince_Zote.");
+            }
         }
     }
 }

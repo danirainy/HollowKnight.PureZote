@@ -1,3 +1,5 @@
-# Pure_Zote
+# Introduction
+PureZote is a mod boss for the game Hollow Knight aiming at creating a greater version of Grey Prince Zote.
 
-A mod for the game Hollow Knight.
+# Hotkeys
+F2: Teleport to Grey Prince Zote.
