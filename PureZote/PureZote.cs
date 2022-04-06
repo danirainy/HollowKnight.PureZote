@@ -8,8 +8,8 @@ namespace PureZote
     public class PureZote : Mod, IGlobalSettings<Settings>
     {
         private Settings settings_ = new();
-        private Minions minions;
-        private Palette palette;
+        private readonly Minions minions;
+        private readonly Palette palette;
         public PureZote() : base("PureZote")
         {
             minions = new Minions(this);
