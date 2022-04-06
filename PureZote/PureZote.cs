@@ -58,9 +58,5 @@ namespace PureZote
                 Log("Force loaded scene GG_Grey_Prince_Zote.");
             }
         }
-        private void SetLighting()
-        {
-
-        }
     }
 }
