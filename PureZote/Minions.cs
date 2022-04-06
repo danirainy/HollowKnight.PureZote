@@ -20,7 +20,7 @@ namespace PureZote
         private readonly List<GameObject> prefabs = new();
         private List<Settings> settings;
         private readonly System.Random random = new();
-        public Minions(Mod mod) =>mod_= mod;
+        public Minions(Mod mod) => mod_ = mod;
         private void Log(string message) => mod_.Log(message);
         public List<(string, string)> GetPreloadNames()
         {

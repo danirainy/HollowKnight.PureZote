@@ -7,9 +7,9 @@ namespace PureZote
     public class Common
     {
         private readonly Mod mod_;
-        public Common(Mod mod)=>mod_ = mod;
+        public Common(Mod mod) => mod_ = mod;
         private void Log(string message) => mod_.Log(message);
-        public  void LogFSM(PlayMakerFSM fsm)
+        public void LogFSM(PlayMakerFSM fsm)
         {
             Log("Adding Logging to FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             foreach (var state in fsm.FsmStates)

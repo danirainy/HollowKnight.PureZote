@@ -9,7 +9,12 @@ namespace PureZote
     {
         private Settings settings_ = new();
         private Minions minions;
-        public PureZote() : base("PureZote"){ minions = new Minions(this); }
+        private Palette palette;
+        public PureZote() : base("PureZote")
+        {
+            minions = new Minions(this);
+            palette = new Palette(this);
+        }
         public void OnLoadGlobal(Settings settings) => settings_ = settings;
         public Settings OnSaveGlobal() => settings_;
         public override string GetVersion() => "1.0";
@@ -27,6 +32,7 @@ namespace PureZote
                 minions.LoadPrefabs(preloadedObjects);
                 UnityEngine.SceneManagement.SceneManager.activeSceneChanged += ActiveSceneChanged;
                 ModHooks.HeroUpdateHook += HeroUpdateHook;
+                On.SceneManager.SetLighting += palette.SetLighting;
             }
             else
             {
@@ -51,6 +57,10 @@ namespace PureZote
                 UnityEngine.SceneManagement.SceneManager.LoadScene("GG_Grey_Prince_Zote");
                 Log("Force loaded scene GG_Grey_Prince_Zote.");
             }
+        }
+        private void SetLighting()
+        {
+
         }
     }
 }

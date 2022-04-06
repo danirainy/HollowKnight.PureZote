@@ -1,7 +1,7 @@
 namespace PureZote
 {
-    public class Settings
-    {
-        public bool enabled = true;
-    }
+	public class Settings
+	{
+		public bool enabled = true;
+	}
 }
