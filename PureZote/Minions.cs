@@ -16,7 +16,7 @@ namespace PureZote
             }
             public bool enableSpittingVelocity_;
         }
-        private Mod mod_;
+        private readonly Mod mod_;
         private readonly List<GameObject> prefabs = new();
         private List<Settings> settings;
         private readonly System.Random random = new();
