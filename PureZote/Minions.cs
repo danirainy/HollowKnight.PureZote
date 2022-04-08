@@ -17,11 +17,15 @@ namespace PureZote
             public bool enableSpittingVelocity_;
         }
         private readonly Mod mod_;
+        private readonly Common common;
         private readonly Dictionary<string, GameObject> prefabs = new();
         public readonly List<GameObject> spittedPrefabs = new();
         public int easyMinionsCount = 0;
         public List<Settings> settings;
-        public Minions(Mod mod) => mod_ = mod;
+        public Minions(Mod mod) {
+            mod_ = mod;
+            common = new Common(mod);
+        }
         private void Log(object message) => mod_.Log(message);
         public List<(string, string)> GetPreloadNames()
         {
@@ -73,7 +77,6 @@ namespace PureZote
                 "Tall Zoteling",
                 "Normal Zoteling",
                 "Ordeal Zoteling",
-                "Ordeal Zoteling",
             })
             {
                 spittedPrefabs.Add(prefabs[name]);
@@ -89,10 +92,11 @@ namespace PureZote
                 FsmUtil.RemoveAction(fsm, "Spawn Antic", 3);
                 FsmUtil.AddCustomAction(fsm, "Spawn Antic", () => fsm.SendEvent("FINISHED"));
                 FsmUtil.RemoveAction(fsm, "Tumble Out", 2);
+                FsmUtil.RemoveAction(fsm, "Death", 0);
                 FsmUtil.AddCustomAction(fsm, "Death Reset", () => 
                 {
                     Object.Destroy(fsm.gameObject); 
-                    easyMinionsCount -= 1; 
+                    easyMinionsCount -= 1;
                 });
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
@@ -127,6 +131,7 @@ namespace PureZote
                 FsmUtil.RemoveAction(fsm, "Spawn Antic", 3);
                 FsmUtil.AddCustomAction(fsm, "Spawn Antic", () => { fsm.SendEvent("FINISHED"); });
                 FsmUtil.RemoveAction(fsm, "Tumble Out", 2);
+                FsmUtil.RemoveAction(fsm, "Death", 0);
                 FsmUtil.AddCustomAction(fsm, "Death Reset", () =>
                 {
                     Object.Destroy(fsm.gameObject);

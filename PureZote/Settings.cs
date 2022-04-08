@@ -4,6 +4,6 @@ namespace PureZote
     {
         public bool enable = true;
         public bool enableTeleportation = true;
-        public int maxEasyMinionCount = 2;
+        public int maxEasyMinionCount = 3;
     }
 }
