@@ -49,20 +49,24 @@ namespace PureZote
             if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Grey Prince" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                FsmUtil.AddCustomAction(fsm, "Level 3", () => fsm.FsmVariables.FindFsmInt("ActiveZotelings Max").Value = settings.maxEasyMinionCount);
+                FsmUtil.AddCustomAction(fsm, "Level 3", () =>
+                {
+                    fsm.FsmVariables.FindFsmInt("ActiveZotelings Max").Value = settings.maxEasyMinionCount;
+                    fsm.gameObject.GetComponent<HealthManager>().hp = 2800;
+                });
                 FsmUtil.InsertCustomAction(fsm, "Idle Start", () =>
                 {
-                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 1000 && !minions.variables.touchedCheckpoint1000)
+                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 2000 && !minions.variables.touchedMinionCheckpoint1)
                     {
-                        Log("Checkpoint 1000 touched. Summoning hard minions.");
-                        minions.variables.touchedCheckpoint1000 = true;
+                        Log("Checkpoint touched. Summoning hard minions.");
+                        minions.variables.touchedMinionCheckpoint1 = true;
                         minions.variables.hardMinionQueue.Add("Salubra Zoteling");
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                     }
-                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 600 && !minions.variables.touchedCheckpoint600)
+                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 1200 && !minions.variables.touchedMinionCheckpoint2)
                     {
-                        Log("Checkpoint 1000 touched. Summoning hard minions.");
-                        minions.variables.touchedCheckpoint600 = true;
+                        Log("Checkpoint touched. Summoning hard minions.");
+                        minions.variables.touchedMinionCheckpoint2 = true;
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                     }
