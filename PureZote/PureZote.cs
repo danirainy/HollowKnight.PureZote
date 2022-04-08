@@ -2,28 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Satchel;
-using HutongGames.PlayMaker;
 
 
 namespace PureZote
 {
     public class PureZote : Mod
     {
+        private readonly Common common;
         private readonly Settings settings = new();
         private readonly Minions minions;
+        private readonly Projectiles projectiles;
         private readonly Palette palette;
-        private readonly Common common;
         private readonly System.Random random = new();
         public PureZote() : base("PureZote")
         {
-            minions = new Minions(this);
-            palette = new Palette(this);
             common = new Common(this);
+            minions = new Minions(this);
+            projectiles = new Projectiles(this);
+            palette = new Palette(this);
         }
         public override string GetVersion() => "1.0";
         public override List<(string, string)> GetPreloadNames()
         {
-            return minions.GetPreloadNames();
+            List<(string, string)> preloadNames = new();
+            foreach (var name in minions.GetPreloadNames())
+                preloadNames.Add(name);
+            foreach (var name in projectiles.GetPreloadNames())
+                preloadNames.Add(name);
+            return preloadNames;
         }
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
@@ -33,6 +39,7 @@ namespace PureZote
                 Log("Enabled.");
                 On.PlayMakerFSM.OnEnable += PlayMakerFSMOnEnable;
                 minions.LoadPrefabs(preloadedObjects);
+                projectiles.LoadPrefabs(preloadedObjects);
                 UnityEngine.SceneManagement.SceneManager.activeSceneChanged += ActiveSceneChanged;
                 ModHooks.HeroUpdateHook += HeroUpdateHook;
                 On.SceneManager.SetLighting += palette.SetLighting;
@@ -77,6 +84,18 @@ namespace PureZote
                         fsm.SetState("Spit Set");
                     }
                 }, 0);
+                FsmUtil.InsertCustomAction(fsm, "Ft Waves", () =>
+                {
+                    var prefab = projectiles.prefabs["traitorLordWave"];
+                    var wave = Object.Instantiate(prefab);
+                    wave.transform.position = new Vector3(fsm.gameObject.transform.position.x, 0, 0.059f);
+                    wave.GetComponent<Rigidbody2D>().velocity = new Vector2(12, 0);
+                    wave = Object.Instantiate(prefab);
+                    wave.transform.position = new Vector3(fsm.gameObject.transform.position.x, 0, 0.059f);
+                    wave.transform.localScale = new Vector3(-1, 1, 1);
+                    wave.GetComponent<Rigidbody2D>().velocity = new Vector2(-12, 0);
+                    fsm.SendEvent("FINISHED");
+                }, 1);
                 FsmUtil.InsertCustomAction(fsm, "Spit Antic", () =>
                 {
                     if (minions.variables.isSpittingHardMinions)
