@@ -54,16 +54,13 @@ namespace PureZote
                     Log("Spitting.");
                     var zoteling = fsm.FsmVariables.FindFsmGameObject("Zoteling").Value;
                     zoteling.GetComponent<Renderer>().enabled = false;
-                    var index = random.Next(minions.spittedPrefabs.Count);
-                    var minion = Object.Instantiate(minions.spittedPrefabs[index]);
-                    var settings_ = minions.settings[index];
+                    var index = random.Next(minions.easyMinionPrefabs.Count);
+                    var minion = Object.Instantiate(minions.easyMinionPrefabs[index]);
+                    var settings_ = minions.easyMinionSettings[index];
                     minion.SetActive(true);
                     minion.SetActiveChildren(true);
                     minion.transform.position = zoteling.transform.position;
-                    if (settings_.enableSpittingVelocity_)
-                    {
-                        minion.GetComponent<Rigidbody2D>().velocity = zoteling.GetComponent<Rigidbody2D>().velocity;
-                    }
+                    minion.GetComponent<Rigidbody2D>().velocity = settings_.velocityScale_ * zoteling.GetComponent<Rigidbody2D>().velocity;
                     ++minions.easyMinionsCount;
                     Log("Spat.");
                 }
