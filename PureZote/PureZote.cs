@@ -88,10 +88,10 @@ namespace PureZote
                 {
                     var prefab = projectiles.prefabs["traitorLordWave"];
                     var wave = Object.Instantiate(prefab);
-                    wave.transform.position = new Vector3(fsm.gameObject.transform.position.x, 0, 0.059f);
+                    wave.transform.position = new Vector3(fsm.gameObject.transform.position.x, 0, 0.061f);
                     wave.GetComponent<Rigidbody2D>().velocity = new Vector2(12, 0);
                     wave = Object.Instantiate(prefab);
-                    wave.transform.position = new Vector3(fsm.gameObject.transform.position.x, 0, 0.059f);
+                    wave.transform.position = new Vector3(fsm.gameObject.transform.position.x, 0, 0.061f);
                     wave.transform.localScale = new Vector3(-1, 1, 1);
                     wave.GetComponent<Rigidbody2D>().velocity = new Vector2(-12, 0);
                     fsm.SendEvent("FINISHED");
