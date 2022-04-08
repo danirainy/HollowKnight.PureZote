@@ -16,14 +16,22 @@ namespace PureZote
             }
             public float velocityScale_;
         }
+        public class Variables
+        {
+            public int minionCount = 0;
+            public readonly List<string> hardMinionQueue = new();
+            public bool isSpittingHardMinions = false;
+            public bool touchedCheckpoint1000 = false;
+            public bool touchedCheckpoint600 = false;
+        }
         private readonly Mod mod_;
         private readonly Common common;
         private readonly Dictionary<string, GameObject> prefabs = new();
         public readonly List<GameObject> easyMinionPrefabs = new();
-        public List<Settings> easyMinionSettings = new();
-        public readonly List<GameObject> hardMinionPrefabs = new();
-        public List<Settings> hardMinionSettings = new();
-        public int easyMinionsCount = 0;
+        public readonly List<Settings> easyMinionSettings = new();
+        public readonly Dictionary<string, GameObject> hardMinionPrefabs = new();
+        public readonly Dictionary<string, Settings> hardMinionSettings = new();
+        public Variables variables;
         public Minions(Mod mod)
         {
             mod_ = mod;
@@ -65,7 +73,7 @@ namespace PureZote
                 prefabs[name] = minion;
                 Log("Minion added: " + minion.name + ".");
             }
-            foreach ((string name, Settings settings_) in new List<(string, Settings)>
+            foreach ((string name, Settings settings) in new List<(string, Settings)>
             {
                 ("Tall Zoteling", new Settings(1)),
                 ("Normal Zoteling", new Settings(1)),
@@ -73,16 +81,16 @@ namespace PureZote
             })
             {
                 easyMinionPrefabs.Add(prefabs[name]);
-                easyMinionSettings.Add(settings_);
+                easyMinionSettings.Add(settings);
             }
-            foreach ((string name, Settings settings_) in new List<(string, Settings)>
+            foreach ((string name, Settings settings) in new List<(string, Settings)>
             {
                 ("Fat Zoteling", new Settings(1)),
                 ("Salubra Zoteling", new Settings(0.5f)),
             })
             {
-                hardMinionPrefabs.Add(prefabs[name]);
-                hardMinionSettings.Add(settings_);
+                hardMinionPrefabs[name] = prefabs[name];
+                hardMinionSettings[name] = settings;
             }
         }
         public void UpgradeFSM(PlayMakerFSM fsm)
@@ -99,7 +107,7 @@ namespace PureZote
                 FsmUtil.AddCustomAction(fsm, "Death Reset", () =>
                 {
                     Object.Destroy(fsm.gameObject);
-                    easyMinionsCount -= 1;
+                    variables.minionCount -= 1;
                 });
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
@@ -124,7 +132,11 @@ namespace PureZote
                         fsm.SendEvent("L");
                     }
                 });
-                FsmUtil.AddCustomAction(fsm, "Death Reset", () => Object.Destroy(fsm.gameObject));
+                FsmUtil.AddCustomAction(fsm, "Death Reset", () =>
+                {
+                    Object.Destroy(fsm.gameObject);
+                    variables.minionCount -= 1;
+                });
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Crew Normal (1)(Clone)" && fsm.FsmName == "Control")
@@ -139,7 +151,7 @@ namespace PureZote
                 FsmUtil.AddCustomAction(fsm, "Death Reset", () =>
                 {
                     Object.Destroy(fsm.gameObject);
-                    easyMinionsCount -= 1;
+                    variables.minionCount -= 1;
                 });
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
@@ -151,7 +163,7 @@ namespace PureZote
                 FsmUtil.AddCustomAction(fsm, "Reset", () =>
                 {
                     Object.Destroy(fsm.gameObject);
-                    easyMinionsCount -= 1;
+                    variables.minionCount -= 1;
                 });
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
@@ -167,7 +179,11 @@ namespace PureZote
                 ghostMovement.xPosMin = 9;
                 ghostMovement.xPosMax = 44;
                 FsmUtil.RemoveAction(fsm, "Dead", 1);
-                FsmUtil.AddCustomAction(fsm, "Dead", () => Object.Destroy(fsm.gameObject));
+                FsmUtil.AddCustomAction(fsm, "Dead", () =>
+                {
+                    Object.Destroy(fsm.gameObject);
+                    variables.minionCount -= 1;
+                });
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Fluke(Clone)" && fsm.FsmName == "Control")
