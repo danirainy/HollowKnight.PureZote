@@ -8,12 +8,17 @@ namespace PureZote
 {
     public class PureZote : Mod
     {
+        private class Variables
+        {
+            public List<string> prioritizedMoves = new() { "Opening Shadow Slam" };
+        }
         private readonly Common common;
         private readonly Settings settings = new();
         private readonly Minions minions;
         private readonly Projectiles projectiles;
         private readonly Palette palette;
         private readonly System.Random random = new();
+        private Variables variables;
         public PureZote() : base("PureZote")
         {
             common = new Common(this);
@@ -61,23 +66,45 @@ namespace PureZote
                     fsm.FsmVariables.FindFsmInt("ActiveZotelings Max").Value = settings.maxEasyMinionCount;
                     fsm.gameObject.GetComponent<HealthManager>().hp = 3000;
                 });
+                FsmUtil.AddCustomAction(fsm, "Enter 1", () =>
+                {
+                    fsm.SetState("Enter Short");
+                });
+                FsmUtil.InsertCustomAction(fsm, "Send Event", () =>
+                 {
+                     Log("Zote is stunned. Resetting certain variables.");
+                     minions.variables.isSpittingHardMinions = false;
+                     Log("Zote is stunned. Reset certain variables.");
+                 }, 0);
+                FsmUtil.InsertCustomAction(fsm, "Fall Through?", () =>
+                {
+                    if (variables.prioritizedMoves.Count > 0)
+                    {
+                        var name = variables.prioritizedMoves[0];
+                        if (name == "Opening Shadow Slam")
+                        {
+                            fsm.SendEvent("GO THROUGH");
+                            variables.prioritizedMoves.RemoveAt(0);
+                        }
+                    }
+                }, 0);
                 FsmUtil.InsertCustomAction(fsm, "Idle Start", () =>
                 {
-                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 3000 && !minions.variables.touchedCheckpoint1)
+                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 2800 && !minions.variables.touchedCheckpoint1)
                     {
                         Log("Checkpoint 1 touched. Summoning hard minions.");
                         minions.variables.touchedCheckpoint1 = true;
                         minions.variables.hardMinionQueue.Add("Salubra Zoteling");
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                     }
-                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 2000 && !minions.variables.touchedCheckpoint2)
+                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 1800 && !minions.variables.touchedCheckpoint2)
                     {
                         Log("Checkpoint 2 touched. Summoning hard minions.");
                         minions.variables.touchedCheckpoint2 = true;
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                     }
-                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 1000 && !minions.variables.touchedCheckpoint3)
+                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 800 && !minions.variables.touchedCheckpoint3)
                     {
                         Log("Checkpoint 3 touched. Enhancing in many ways.");
                         minions.variables.touchedCheckpoint3 = true;
@@ -87,6 +114,14 @@ namespace PureZote
                         Log("Hard minion queue is not empty. Going to spit.");
                         minions.variables.isSpittingHardMinions = true;
                         fsm.SetState("Spit Set");
+                    }
+                    if (variables.prioritizedMoves.Count > 0)
+                    {
+                        var name = variables.prioritizedMoves[0];
+                        if (name == "Opening Shadow Slam")
+                        {
+                            fsm.SetState("Set Jumps");
+                        }
                     }
                 }, 0);
                 FsmUtil.InsertCustomAction(fsm, "Ft Waves", () =>
@@ -163,6 +198,7 @@ namespace PureZote
                     }
                 }, 0);
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+                variables = new();
                 minions.variables = new();
             }
             minions.UpgradeFSM(fsm);
