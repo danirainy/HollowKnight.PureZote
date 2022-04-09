@@ -21,8 +21,9 @@ namespace PureZote
             public int minionCount = 0;
             public readonly List<string> hardMinionQueue = new();
             public bool isSpittingHardMinions = false;
-            public bool touchedMinionCheckpoint1 = false;
-            public bool touchedMinionCheckpoint2 = false;
+            public bool touchedCheckpoint1 = false;
+            public bool touchedCheckpoint2 = false;
+            public bool touchedCheckpoint3 = false;
         }
         private readonly Mod mod_;
         private readonly Common common;

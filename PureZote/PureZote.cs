@@ -59,23 +59,28 @@ namespace PureZote
                 FsmUtil.AddCustomAction(fsm, "Level 3", () =>
                 {
                     fsm.FsmVariables.FindFsmInt("ActiveZotelings Max").Value = settings.maxEasyMinionCount;
-                    fsm.gameObject.GetComponent<HealthManager>().hp = 2800;
+                    fsm.gameObject.GetComponent<HealthManager>().hp = 3000;
                 });
                 FsmUtil.InsertCustomAction(fsm, "Idle Start", () =>
                 {
-                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 2000 && !minions.variables.touchedMinionCheckpoint1)
+                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 3000 && !minions.variables.touchedCheckpoint1)
                     {
-                        Log("Checkpoint touched. Summoning hard minions.");
-                        minions.variables.touchedMinionCheckpoint1 = true;
+                        Log("Checkpoint 1 touched. Summoning hard minions.");
+                        minions.variables.touchedCheckpoint1 = true;
                         minions.variables.hardMinionQueue.Add("Salubra Zoteling");
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                     }
-                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 1200 && !minions.variables.touchedMinionCheckpoint2)
+                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 2000 && !minions.variables.touchedCheckpoint2)
                     {
-                        Log("Checkpoint touched. Summoning hard minions.");
-                        minions.variables.touchedMinionCheckpoint2 = true;
+                        Log("Checkpoint 2 touched. Summoning hard minions.");
+                        minions.variables.touchedCheckpoint2 = true;
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
+                    }
+                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 1000 && !minions.variables.touchedCheckpoint3)
+                    {
+                        Log("Checkpoint 3 touched. Enhancing in many ways.");
+                        minions.variables.touchedCheckpoint3 = true;
                     }
                     if (minions.variables.hardMinionQueue.Count > 0)
                     {
@@ -157,8 +162,8 @@ namespace PureZote
                         }
                     }
                 }, 0);
-                minions.variables = new();
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+                minions.variables = new();
             }
             minions.UpgradeFSM(fsm);
         }
