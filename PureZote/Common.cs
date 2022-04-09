@@ -23,5 +23,19 @@ namespace PureZote
             }
             Log("Added Logging to FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
         }
+        public void LogFSMState(PlayMakerFSM fsm, string state, System.Action function = null)
+        {
+            Log("Adding Logging to State: " + fsm.FsmName + " - " + state + ".");
+            for (int i = fsm.GetState(state).Actions.Length; i >= 0; i--)
+            {
+                FsmUtil.InsertCustomAction(fsm, state, () =>
+                {
+                    Log("FSM: " + fsm.FsmName + " - " + state + " entering " + "action: " + i.ToString() + ".");
+                    if (function != null)
+                        function();
+                }, i);
+            }
+            Log("Added Logging to State: " + fsm.FsmName + " - " + state + ".");
+        }
     }
 }
