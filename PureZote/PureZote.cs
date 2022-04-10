@@ -76,6 +76,30 @@ namespace PureZote
                      minions.variables.isSpittingHardMinions = false;
                      Log("Zote is stunned. Reset certain variables.");
                  }, 0);
+                FsmUtil.InsertCustomAction(fsm, "Stomp", () =>
+                {
+                    if (random.Next(2) == 1)
+                        fsm.SetState("Shift Dir");
+                }, 0);
+                FsmUtil.InsertCustomAction(fsm, "Charge Fall", () =>
+                {
+                    if (random.Next(2) == 1)
+                        fsm.SetState("Jump Antic");
+                }, 0);
+                void setWaveScale(PlayMakerFSM fsm)
+                {
+                    var wave = fsm.FsmVariables.GetFsmGameObject("Shockwave").Value;
+                    Log("Oringal wave size: " + wave.transform.localScale.x.ToString());
+                    wave.transform.SetScaleX(3);
+                    Log("New wave size: " + wave.transform.localScale.x.ToString());
+                }
+                FsmUtil.InsertCustomAction(fsm, "Slash Waves L", () => setWaveScale(fsm), 4);
+                FsmUtil.InsertCustomAction(fsm, "Slash Waves R", () => setWaveScale(fsm), 4);
+                FsmUtil.InsertCustomAction(fsm, "B Roar Antic", () =>
+                {
+                    minions.variables.roarType = random.Next(3);
+                }, 0);
+                FsmUtil.RemoveAction(fsm, "Aim Jump", 5);
                 FsmUtil.InsertCustomAction(fsm, "Fall Through?", () =>
                 {
                     if (variables.prioritizedMoves.Count > 0)

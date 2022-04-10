@@ -24,6 +24,7 @@ namespace PureZote
             public bool touchedCheckpoint1 = false;
             public bool touchedCheckpoint2 = false;
             public bool touchedCheckpoint3 = false;
+            public int roarType = 0;
         }
         private readonly Mod mod_;
         private readonly Common common;
@@ -226,7 +227,7 @@ namespace PureZote
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
                 FsmUtil.AddCustomAction(fsm, "Set Pos", () =>
                 {
-                    int index = random.Next(3);
+                    int index = variables.roarType;
                     if (index == 0 || GameObject.Find("Zote Crew Fat (1)(Clone)") != null)
                     {
                         return;
