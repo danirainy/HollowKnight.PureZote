@@ -107,7 +107,7 @@ namespace PureZote
                             return;
                         }
                     }
-                    minions.variables.roarType = random.Next(3);
+                    minions.variables.roarType = random.Next(1, 3);
                 }, 0);
                 FsmUtil.RemoveAction(fsm, "Aim Jump", 5);
                 FsmUtil.InsertCustomAction(fsm, "Fall Through?", () =>
@@ -239,6 +239,7 @@ namespace PureZote
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
                 variables = new();
                 minions.variables = new();
+                fsm.gameObject.GetComponent<tk2dSprite>().color = Color.magenta;
             }
             minions.UpgradeFSM(fsm);
         }

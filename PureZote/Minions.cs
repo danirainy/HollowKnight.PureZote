@@ -228,7 +228,7 @@ namespace PureZote
                 FsmUtil.AddCustomAction(fsm, "Set Pos", () =>
                 {
                     int index = variables.roarType;
-                    if (index == 0 || GameObject.Find("Zote Crew Fat (1)(Clone)") != null)
+                    if (index == 0 || GameObject.Find("Zote Crew Fat (1)(Clone)") != null || GameObject.Find("Zote Salubra(Clone)"))
                     {
                         return;
                     }
@@ -258,6 +258,7 @@ namespace PureZote
                     {
                         GameObject minion = hardMinionPrefabs["Salubra Zoteling"];
                         minion = Object.Instantiate(minion);
+                        minion.name = "Salubra Zoteling Final";
                         minion.SetActive(true);
                         minion.SetActiveChildren(true);
                         minion.transform.position = new Vector3(fsm.gameObject.transform.position.x, 10, fsm.gameObject.transform.position.z);
@@ -266,6 +267,10 @@ namespace PureZote
                             var voice = minion.transform.Find("Voice").gameObject;
                             voice.SetActive(false);
                         });
+                        var ghostMovement = FsmUtil.GetAction<HutongGames.PlayMaker.Actions.GhostMovement>(minion.GetComponent<PlayMakerFSM>(), "Sucking", 8);
+                        ghostMovement.yPosMin = ghostMovement.yPosMin.Value + 5;
+                        ghostMovement.yPosMax = ghostMovement.yPosMax.Value + 5;
+
                     }
                     fsm.SetState("Dormant");
                 });
