@@ -243,7 +243,7 @@ namespace PureZote
                         minion.transform.SetScaleY(0.5f * minion.transform.localScale.y);
                         minion.transform.SetScaleZ(0.5f * minion.transform.localScale.z);
                     }
-                    else
+                    else if (index == 2)
                     {
                         GameObject minion = hardMinionPrefabs["Thwomp Zoteling"];
                         minion = Object.Instantiate(minion);
@@ -253,6 +253,19 @@ namespace PureZote
                         minion.transform.SetScaleX(0.5f * minion.transform.localScale.x);
                         minion.transform.SetScaleY(0.5f * minion.transform.localScale.y);
                         minion.transform.SetScaleZ(0.5f * minion.transform.localScale.z);
+                    }
+                    else
+                    {
+                        GameObject minion = hardMinionPrefabs["Salubra Zoteling"];
+                        minion = Object.Instantiate(minion);
+                        minion.SetActive(true);
+                        minion.SetActiveChildren(true);
+                        minion.transform.position = new Vector3(fsm.gameObject.transform.position.x, 10, fsm.gameObject.transform.position.z);
+                        FsmUtil.AddCustomAction(minion.GetComponent<PlayMakerFSM>(), "Idle", () =>
+                        {
+                            var voice = minion.transform.Find("Voice").gameObject;
+                            voice.SetActive(false);
+                        });
                     }
                     fsm.SetState("Dormant");
                 });

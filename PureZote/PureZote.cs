@@ -97,6 +97,16 @@ namespace PureZote
                 FsmUtil.InsertCustomAction(fsm, "Slash Waves R", () => setWaveScale(fsm), 4);
                 FsmUtil.InsertCustomAction(fsm, "B Roar Antic", () =>
                 {
+                    if (variables.prioritizedMoves.Count > 0)
+                    {
+                        var name = variables.prioritizedMoves[0];
+                        if (name == "Summon Salubra Zotelings")
+                        {
+                            minions.variables.roarType = 3;
+                            variables.prioritizedMoves.RemoveAt(0);
+                            return;
+                        }
+                    }
                     minions.variables.roarType = random.Next(3);
                 }, 0);
                 FsmUtil.RemoveAction(fsm, "Aim Jump", 5);
@@ -128,11 +138,11 @@ namespace PureZote
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                     }
-                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 3000 && !minions.variables.touchedCheckpoint3)
+                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 800 && !minions.variables.touchedCheckpoint3)
                     {
-                        Log("Checkpoint 3 touched. Enhancing in many ways.");
+                        Log("Checkpoint 3 touched. Summoning hard minions.");
                         minions.variables.touchedCheckpoint3 = true;
-                        variables.prioritizedMoves.Add("Second Stage");
+                        variables.prioritizedMoves.Add("Summon Salubra Zotelings");
                     }
                     if (minions.variables.hardMinionQueue.Count > 0)
                     {
@@ -147,10 +157,9 @@ namespace PureZote
                         {
                             fsm.SetState("Set Jumps");
                         }
-                        else if (name == "Second Stage")
+                        else if (name == "Summon Salubra Zotelings")
                         {
                             fsm.SetState("B Roar Antic");
-                            variables.prioritizedMoves.RemoveAt(0);
                         }
                     }
                 }, 0);
