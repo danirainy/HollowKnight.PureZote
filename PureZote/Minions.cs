@@ -32,6 +32,7 @@ namespace PureZote
         public readonly List<Settings> easyMinionSettings = new();
         public readonly Dictionary<string, GameObject> hardMinionPrefabs = new();
         public readonly Dictionary<string, Settings> hardMinionSettings = new();
+        private readonly System.Random random = new();
         public Variables variables;
         public Minions(Mod mod)
         {
@@ -57,6 +58,7 @@ namespace PureZote
                 ("Zotelings", "Ordeal Zoteling", "Ordeal Zoteling"),
                 ("Zote Salubra", "", "Salubra Zoteling"),
                 ("Zote Fluke", "", "Fluke Zoteling"),
+                ("Zote Thwomp", "", "Thwomp Zoteling"),
             };
             foreach ((string group, string instance, string name) in names)
             {
@@ -88,6 +90,8 @@ namespace PureZote
             {
                 ("Fat Zoteling", new Settings(1)),
                 ("Salubra Zoteling", new Settings(0.5f)),
+                ("Fluke Zoteling", new Settings(1)),
+                ("Thwomp Zoteling", new Settings(1)),
             })
             {
                 hardMinionPrefabs[name] = prefabs[name];
@@ -191,7 +195,66 @@ namespace PureZote
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
                 FsmUtil.AddTransition(fsm, "Dormant", "FINISHED", "Pos");
-                FsmUtil.RemoveAction(fsm, "Pos", 3);
+                FsmUtil.InsertCustomAction(fsm, "Pos", () =>
+                {
+                    fsm.FsmVariables.GetFsmFloat("X Pos").Value = fsm.gameObject.transform.position.x;
+                }, 1);
+                FsmUtil.RemoveAction(fsm, "Pos", 4);
+                Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+            }
+            else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Thwomp(Clone)" && fsm.FsmName == "Control")
+            {
+                Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+                FsmUtil.AddTransition(fsm, "Dormant", "FINISHED", "Set Pos");
+                FsmUtil.InsertCustomAction(fsm, "Set Pos", () =>
+                {
+                    fsm.FsmVariables.GetFsmFloat("X Pos").Value = fsm.gameObject.transform.position.x;
+                    fsm.gameObject.transform.Find("Enemy Crusher").gameObject.SetActive(false);
+                }, 1);
+                FsmUtil.RemoveAction(fsm, "Set Pos", 2);
+                FsmUtil.RemoveAction(fsm, "Slam", 5);
+                FsmUtil.RemoveAction(fsm, "Down", 6);
+                FsmUtil.InsertCustomAction(fsm, "Waves", () =>
+                {
+                    fsm.SendEvent("FINISHED");
+                }, 0);
+                FsmUtil.RemoveAction(fsm, "Rise", 7);
+                Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+            }
+            else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name.StartsWith("Zote Balloon") && fsm.FsmName == "Control")
+            {
+                Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+                FsmUtil.AddCustomAction(fsm, "Set Pos", () =>
+                {
+                    int index = random.Next(3);
+                    if (index == 0 || GameObject.Find("Zote Crew Fat (1)(Clone)") != null)
+                    {
+                        return;
+                    }
+                    else if (index == 1)
+                    {
+                        GameObject minion = hardMinionPrefabs["Fluke Zoteling"];
+                        minion = Object.Instantiate(minion);
+                        minion.SetActive(true);
+                        minion.SetActiveChildren(true);
+                        minion.transform.position = new Vector3(fsm.gameObject.transform.position.x, 6, fsm.gameObject.transform.position.z);
+                        minion.transform.SetScaleX(0.5f * minion.transform.localScale.x);
+                        minion.transform.SetScaleY(0.5f * minion.transform.localScale.y);
+                        minion.transform.SetScaleZ(0.5f * minion.transform.localScale.z);
+                    }
+                    else
+                    {
+                        GameObject minion = hardMinionPrefabs["Thwomp Zoteling"];
+                        minion = Object.Instantiate(minion);
+                        minion.SetActive(true);
+                        minion.SetActiveChildren(true);
+                        minion.transform.position = new Vector3(fsm.gameObject.transform.position.x, 23.4f, fsm.gameObject.transform.position.z);
+                        minion.transform.SetScaleX(0.5f * minion.transform.localScale.x);
+                        minion.transform.SetScaleY(0.5f * minion.transform.localScale.y);
+                        minion.transform.SetScaleZ(0.5f * minion.transform.localScale.z);
+                    }
+                    fsm.SetState("Dormant");
+                });
                 Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             }
         }

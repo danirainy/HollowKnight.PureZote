@@ -104,10 +104,11 @@ namespace PureZote
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                     }
-                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 800 && !minions.variables.touchedCheckpoint3)
+                    if (fsm.gameObject.GetComponent<HealthManager>().hp <= 3000 && !minions.variables.touchedCheckpoint3)
                     {
                         Log("Checkpoint 3 touched. Enhancing in many ways.");
                         minions.variables.touchedCheckpoint3 = true;
+                        variables.prioritizedMoves.Add("Second Stage");
                     }
                     if (minions.variables.hardMinionQueue.Count > 0)
                     {
@@ -122,16 +123,21 @@ namespace PureZote
                         {
                             fsm.SetState("Set Jumps");
                         }
+                        else if (name == "Second Stage")
+                        {
+                            fsm.SetState("B Roar Antic");
+                            variables.prioritizedMoves.RemoveAt(0);
+                        }
                     }
                 }, 0);
                 FsmUtil.InsertCustomAction(fsm, "Ft Waves", () =>
                 {
                     var prefab = projectiles.prefabs["traitorLordWave"];
                     var wave = Object.Instantiate(prefab);
-                    wave.transform.position = new Vector3(fsm.gameObject.transform.position.x, 0, 0.061f);
+                    wave.transform.position = new Vector3(fsm.gameObject.transform.position.x, 2, 1);
                     wave.GetComponent<Rigidbody2D>().velocity = new Vector2(12, 0);
                     wave = Object.Instantiate(prefab);
-                    wave.transform.position = new Vector3(fsm.gameObject.transform.position.x, 0, 0.061f);
+                    wave.transform.position = new Vector3(fsm.gameObject.transform.position.x, 2, 1);
                     wave.transform.localScale = new Vector3(-1, 1, 1);
                     wave.GetComponent<Rigidbody2D>().velocity = new Vector2(-12, 0);
                     fsm.SendEvent("FINISHED");
