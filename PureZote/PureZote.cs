@@ -38,10 +38,10 @@ namespace PureZote
         }
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
-            Log("Initializing.");
+            LogDebug("Initializing.");
             if (settings.enable)
             {
-                Log("Enabled.");
+                LogDebug("Enabled.");
                 On.PlayMakerFSM.OnEnable += PlayMakerFSMOnEnable;
                 minions.LoadPrefabs(preloadedObjects);
                 projectiles.LoadPrefabs(preloadedObjects);
@@ -51,37 +51,37 @@ namespace PureZote
             }
             else
             {
-                Log("Disabled.");
+                LogDebug("Disabled.");
             }
-            Log("Initialized.");
+            LogDebug("Initialized.");
         }
         private void PlayMakerFSMOnEnable(On.PlayMakerFSM.orig_OnEnable original, PlayMakerFSM fsm)
         {
             original(fsm);
             if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Grey Prince" && fsm.FsmName == "Control")
             {
-                Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                FsmUtil.AddCustomAction(fsm, "Level 3", () =>
+                LogDebug("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+                fsm.AddCustomAction("Level 3", () =>
                 {
                     fsm.FsmVariables.FindFsmInt("ActiveZotelings Max").Value = settings.maxEasyMinionCount;
                     fsm.gameObject.GetComponent<HealthManager>().hp = 3000;
                 });
-                FsmUtil.AddCustomAction(fsm, "Enter 1", () =>
+                fsm.AddCustomAction("Enter 1", () =>
                 {
                     fsm.SetState("Enter Short");
                 });
-                FsmUtil.InsertCustomAction(fsm, "Send Event", () =>
+                fsm.InsertCustomAction("Send Event", () =>
                  {
-                     Log("Zote is stunned. Resetting certain variables.");
+                     LogDebug("Zote is stunned. Resetting certain variables.");
                      minions.variables.isSpittingHardMinions = false;
-                     Log("Zote is stunned. Reset certain variables.");
+                     LogDebug("Zote is stunned. Reset certain variables.");
                  }, 0);
-                FsmUtil.InsertCustomAction(fsm, "Stomp", () =>
+                fsm.InsertCustomAction("Stomp", () =>
                 {
                     if (random.Next(2) == 1)
                         fsm.SetState("Shift Dir");
                 }, 0);
-                FsmUtil.InsertCustomAction(fsm, "Charge Fall", () =>
+                fsm.InsertCustomAction("Charge Fall", () =>
                 {
                     if (random.Next(2) == 1)
                         fsm.SetState("Jump Antic");
@@ -89,13 +89,13 @@ namespace PureZote
                 void setWaveScale(PlayMakerFSM fsm)
                 {
                     var wave = fsm.FsmVariables.GetFsmGameObject("Shockwave").Value;
-                    Log("Oringal wave size: " + wave.transform.localScale.x.ToString());
+                    LogDebug("Oringal wave size: " + wave.transform.localScale.x.ToString());
                     wave.transform.SetScaleX(3);
-                    Log("New wave size: " + wave.transform.localScale.x.ToString());
+                    LogDebug("New wave size: " + wave.transform.localScale.x.ToString());
                 }
-                FsmUtil.InsertCustomAction(fsm, "Slash Waves L", () => setWaveScale(fsm), 4);
-                FsmUtil.InsertCustomAction(fsm, "Slash Waves R", () => setWaveScale(fsm), 4);
-                FsmUtil.InsertCustomAction(fsm, "B Roar Antic", () =>
+                fsm.InsertCustomAction("Slash Waves L", () => setWaveScale(fsm), 4);
+                fsm.InsertCustomAction("Slash Waves R", () => setWaveScale(fsm), 4);
+                fsm.InsertCustomAction("B Roar Antic", () =>
                 {
                     if (variables.prioritizedMoves.Count > 0)
                     {
@@ -109,8 +109,8 @@ namespace PureZote
                     }
                     minions.variables.roarType = random.Next(1, 3);
                 }, 0);
-                FsmUtil.RemoveAction(fsm, "Aim Jump", 5);
-                FsmUtil.InsertCustomAction(fsm, "Fall Through?", () =>
+                fsm.RemoveAction("Aim Jump", 5);
+                fsm.InsertCustomAction("Fall Through?", () =>
                 {
                     if (variables.prioritizedMoves.Count > 0)
                     {
@@ -122,31 +122,31 @@ namespace PureZote
                         }
                     }
                 }, 0);
-                FsmUtil.InsertCustomAction(fsm, "Idle Start", () =>
+                fsm.InsertCustomAction("Idle Start", () =>
                 {
                     if (fsm.gameObject.GetComponent<HealthManager>().hp <= 2800 && !minions.variables.touchedCheckpoint1)
                     {
-                        Log("Checkpoint 1 touched. Summoning hard minions.");
+                        LogDebug("Checkpoint 1 touched. Summoning hard minions.");
                         minions.variables.touchedCheckpoint1 = true;
                         minions.variables.hardMinionQueue.Add("Salubra Zoteling");
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                     }
                     if (fsm.gameObject.GetComponent<HealthManager>().hp <= 1800 && !minions.variables.touchedCheckpoint2)
                     {
-                        Log("Checkpoint 2 touched. Summoning hard minions.");
+                        LogDebug("Checkpoint 2 touched. Summoning hard minions.");
                         minions.variables.touchedCheckpoint2 = true;
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                         minions.variables.hardMinionQueue.Add("Fat Zoteling");
                     }
                     if (fsm.gameObject.GetComponent<HealthManager>().hp <= 800 && !minions.variables.touchedCheckpoint3)
                     {
-                        Log("Checkpoint 3 touched. Summoning hard minions.");
+                        LogDebug("Checkpoint 3 touched. Summoning hard minions.");
                         minions.variables.touchedCheckpoint3 = true;
                         variables.prioritizedMoves.Add("Summon Salubra Zotelings");
                     }
                     if (minions.variables.hardMinionQueue.Count > 0)
                     {
-                        Log("Hard minion queue is not empty. Going to spit.");
+                        LogDebug("Hard minion queue is not empty. Going to spit.");
                         minions.variables.isSpittingHardMinions = true;
                         fsm.SetState("Spit Set");
                     }
@@ -163,7 +163,7 @@ namespace PureZote
                         }
                     }
                 }, 0);
-                FsmUtil.InsertCustomAction(fsm, "Ft Waves", () =>
+                fsm.InsertCustomAction("Ft Waves", () =>
                 {
                     var prefab = projectiles.prefabs["traitorLordWave"];
                     var wave = Object.Instantiate(prefab);
@@ -175,11 +175,11 @@ namespace PureZote
                     wave.GetComponent<Rigidbody2D>().velocity = new Vector2(-12, 0);
                     fsm.SendEvent("FINISHED");
                 }, 1);
-                FsmUtil.InsertCustomAction(fsm, "Spit Antic", () =>
+                fsm.InsertCustomAction("Spit Antic", () =>
                 {
                     if (minions.variables.isSpittingHardMinions)
                     {
-                        Log("Allowing to go off limit for hard minions.");
+                        LogDebug("Allowing to go off limit for hard minions.");
                         fsm.FsmVariables.FindFsmInt("ActiveZotelings").Value = 0;
                     }
                     else
@@ -189,14 +189,14 @@ namespace PureZote
                 }, 2);
                 void Spit(PlayMakerFSM fsm)
                 {
-                    Log("Spitting.");
+                    LogDebug("Spitting.");
                     var zoteling = fsm.FsmVariables.FindFsmGameObject("Zoteling").Value;
                     zoteling.GetComponent<Renderer>().enabled = false;
                     GameObject minion;
                     Minions.Settings settings;
                     if (minions.variables.isSpittingHardMinions)
                     {
-                        Log("Retrieving hard minions.");
+                        LogDebug("Retrieving hard minions.");
                         var name = minions.variables.hardMinionQueue[0];
                         minions.variables.hardMinionQueue.RemoveAt(0);
                         minion = minions.hardMinionPrefabs[name];
@@ -214,17 +214,17 @@ namespace PureZote
                     minion.transform.position = zoteling.transform.position;
                     minion.GetComponent<Rigidbody2D>().velocity = settings.velocityScale_ * zoteling.GetComponent<Rigidbody2D>().velocity;
                     ++minions.variables.minionCount;
-                    Log("Spat.");
+                    LogDebug("Spat.");
                 }
-                FsmUtil.RemoveAction(fsm, "Spit L", 7);
-                FsmUtil.AddCustomAction(fsm, "Spit L", () => Spit(fsm));
-                FsmUtil.RemoveAction(fsm, "Spit R", 7);
-                FsmUtil.AddCustomAction(fsm, "Spit R", () => Spit(fsm));
-                FsmUtil.InsertCustomAction(fsm, "Respit?", () =>
+                fsm.RemoveAction("Spit L", 7);
+                fsm.AddCustomAction("Spit L", () => Spit(fsm));
+                fsm.RemoveAction("Spit R", 7);
+                fsm.AddCustomAction("Spit R", () => Spit(fsm));
+                fsm.InsertCustomAction("Respit?", () =>
                 {
                     if (minions.variables.isSpittingHardMinions)
                     {
-                        Log("Spitting hard minions. Respit if and only the queue is not empty");
+                        LogDebug("Spitting hard minions. Respit if and only the queue is not empty");
                         if (minions.variables.hardMinionQueue.Count > 0)
                         {
                             fsm.SendEvent("REPEAT");
@@ -236,7 +236,7 @@ namespace PureZote
                         }
                     }
                 }, 0);
-                Log("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
+                LogDebug("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
                 variables = new();
                 minions.variables = new();
                 fsm.gameObject.GetComponent<tk2dSprite>().color = Color.magenta;
@@ -245,15 +245,15 @@ namespace PureZote
         }
         private void ActiveSceneChanged(UnityEngine.SceneManagement.Scene from, UnityEngine.SceneManagement.Scene to)
         {
-            Log("Scene loaded: " + to.name + ".");
+            LogDebug("Scene loaded: " + to.name + ".");
         }
         private void HeroUpdateHook()
         {
             if (settings.enableTeleportation && Input.GetKeyDown(KeyCode.F2))
             {
-                Log("Teleporting to scene GG_Grey_Prince_Zote.");
+                LogDebug("Teleporting to scene GG_Grey_Prince_Zote.");
                 UnityEngine.SceneManagement.SceneManager.LoadScene("GG_Grey_Prince_Zote");
-                Log("Teleported to scene GG_Grey_Prince_Zote.");
+                LogDebug("Teleported to scene GG_Grey_Prince_Zote.");
             }
         }
     }

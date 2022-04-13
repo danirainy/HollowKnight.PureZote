@@ -8,7 +8,7 @@ namespace PureZote
     {
         private readonly Mod mod_;
         public Common(Mod mod) => mod_ = mod;
-        private void Log(object message) => mod_.Log(message);
+        private void Log(object message) => mod_.LogDebug(message);
         public void LogFSM(PlayMakerFSM fsm, System.Action function = null)
         {
             Log("Adding Logging to FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
