@@ -1,5 +1,5 @@
-﻿using Satchel;
-using Modding;
+﻿using Modding;
+using Vasi;
 
 
 namespace PureZote
@@ -14,7 +14,7 @@ namespace PureZote
             Log("Adding Logging to FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
             foreach (var state in fsm.FsmStates)
             {
-                FsmUtil.InsertCustomAction(fsm, state.Name, () =>
+                fsm.InsertCustomAction(state.Name, () =>
                 {
                     Log("FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + " entering " + "state: " + state.Name + ".");
                     if (function != null)
@@ -28,7 +28,7 @@ namespace PureZote
             Log("Adding Logging to State: " + fsm.FsmName + " - " + state + ".");
             for (int i = fsm.GetState(state).Actions.Length; i >= 0; i--)
             {
-                FsmUtil.InsertCustomAction(fsm, state, () =>
+                fsm.InsertCustomAction(state, () =>
                 {
                     Log("FSM: " + fsm.FsmName + " - " + state + " entering " + "action: " + i.ToString() + ".");
                     if (function != null)

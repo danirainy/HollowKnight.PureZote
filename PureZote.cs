@@ -1,7 +1,6 @@
 ﻿using Modding;
 using System.Collections.Generic;
 using UnityEngine;
-using Satchel;
 
 
 namespace PureZote
@@ -10,14 +9,14 @@ namespace PureZote
     {
         private class Variables
         {
-            public List<string> prioritizedMoves = new() { "Opening Shadow Slam" };
+            public List<string> prioritizedMoves = new List<string>() { "Opening Shadow Slam" };
         }
         private readonly Common common;
-        private readonly Settings settings = new();
+        private readonly Settings settings = new Settings();
         private readonly Minions minions;
         private readonly Projectiles projectiles;
         private readonly Palette palette;
-        private readonly System.Random random = new();
+        private readonly System.Random random = new System.Random();
         private Variables variables;
         public PureZote() : base("PureZote")
         {
@@ -29,7 +28,7 @@ namespace PureZote
         public override string GetVersion() => "1.0";
         public override List<(string, string)> GetPreloadNames()
         {
-            List<(string, string)> preloadNames = new();
+            List<(string, string)> preloadNames = new List<(string, string)>();
             foreach (var name in minions.GetPreloadNames())
                 preloadNames.Add(name);
             foreach (var name in projectiles.GetPreloadNames())
@@ -46,8 +45,7 @@ namespace PureZote
                 minions.LoadPrefabs(preloadedObjects);
                 projectiles.LoadPrefabs(preloadedObjects);
                 UnityEngine.SceneManagement.SceneManager.activeSceneChanged += ActiveSceneChanged;
-                ModHooks.HeroUpdateHook += HeroUpdateHook;
-                On.SceneManager.SetLighting += palette.SetLighting;
+                ModHooks.Instance.HeroUpdateHook += HeroUpdateHook;
             }
             else
             {
@@ -86,9 +84,9 @@ namespace PureZote
                     if (random.Next(2) == 1)
                         fsm.SetState("Jump Antic");
                 }, 0);
-                void setWaveScale(PlayMakerFSM fsm)
+                void setWaveScale(PlayMakerFSM fsm1)
                 {
-                    var wave = fsm.FsmVariables.GetFsmGameObject("Shockwave").Value;
+                    var wave = fsm1.FsmVariables.GetFsmGameObject("Shockwave").Value;
                     LogDebug("Oringal wave size: " + wave.transform.localScale.x.ToString());
                     wave.transform.SetScaleX(3);
                     LogDebug("New wave size: " + wave.transform.localScale.x.ToString());
@@ -187,10 +185,10 @@ namespace PureZote
                         fsm.FsmVariables.FindFsmInt("ActiveZotelings").Value = minions.variables.minionCount;
                     }
                 }, 2);
-                void Spit(PlayMakerFSM fsm)
+                void Spit(PlayMakerFSM fsm1)
                 {
                     LogDebug("Spitting.");
-                    var zoteling = fsm.FsmVariables.FindFsmGameObject("Zoteling").Value;
+                    var zoteling = fsm1.FsmVariables.FindFsmGameObject("Zoteling").Value;
                     zoteling.GetComponent<Renderer>().enabled = false;
                     GameObject minion;
                     Minions.Settings settings;
@@ -237,9 +235,8 @@ namespace PureZote
                     }
                 }, 0);
                 LogDebug("Upgraded FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                variables = new();
-                minions.variables = new();
-                fsm.gameObject.GetComponent<tk2dSprite>().color = Color.magenta;
+                variables = new Variables();
+                minions.variables = new Minions.Variables();
             }
             minions.UpgradeFSM(fsm);
         }

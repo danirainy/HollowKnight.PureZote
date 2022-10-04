@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Modding;
-using Satchel;
 using HutongGames.PlayMaker.Actions;
+using Vasi;
 
 
 namespace PureZote
@@ -11,7 +11,7 @@ namespace PureZote
     {
         private readonly Mod mod_;
         private readonly Common common;
-        public readonly Dictionary<string, GameObject> prefabs = new();
+        public readonly Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject>();
         public Projectiles(Mod mod)
         {
             mod_ = mod;

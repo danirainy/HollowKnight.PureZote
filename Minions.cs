@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Modding;
-using Satchel;
 using HutongGames.PlayMaker.Actions;
+using Vasi;
 
 
 namespace PureZote
@@ -20,7 +20,7 @@ namespace PureZote
         public class Variables
         {
             public int minionCount = 0;
-            public readonly List<string> hardMinionQueue = new();
+            public readonly List<string> hardMinionQueue = new List<string>();
             public bool isSpittingHardMinions = false;
             public bool touchedCheckpoint1 = false;
             public bool touchedCheckpoint2 = false;
@@ -29,12 +29,12 @@ namespace PureZote
         }
         private readonly Mod mod_;
         private readonly Common common;
-        private readonly Dictionary<string, GameObject> prefabs = new();
-        public readonly List<GameObject> easyMinionPrefabs = new();
-        public readonly List<Settings> easyMinionSettings = new();
-        public readonly Dictionary<string, GameObject> hardMinionPrefabs = new();
-        public readonly Dictionary<string, Settings> hardMinionSettings = new();
-        private readonly System.Random random = new();
+        private readonly Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject>();
+        public readonly List<GameObject> easyMinionPrefabs = new List<GameObject>();
+        public readonly List<Settings> easyMinionSettings = new List<Settings>();
+        public readonly Dictionary<string, GameObject> hardMinionPrefabs = new Dictionary<string, GameObject>();
+        public readonly Dictionary<string, Settings> hardMinionSettings = new Dictionary<string, Settings>();
+        private readonly System.Random random = new System.Random();
         public Variables variables;
         public Minions(Mod mod)
         {
