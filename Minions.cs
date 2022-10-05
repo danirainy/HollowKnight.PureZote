@@ -105,7 +105,8 @@ namespace PureZote
             if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Crew Tall(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                fsm.AddTransition("Dormant", "FINISHED", "Multiply");
+                fsm.SendEvent("SPAWN");
+                fsm.SetState("Multiply");
                 fsm.RemoveAction("Spawn Antic", 1);
                 fsm.RemoveAction("Spawn Antic", 3);
                 fsm.AddCustomAction("Spawn Antic", () => fsm.SendEvent("FINISHED"));
@@ -121,7 +122,8 @@ namespace PureZote
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Crew Fat (1)(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                fsm.AddTransition("Dormant", "FINISHED", "Multiply");
+                fsm.SendEvent("SPAWN");
+                fsm.SetState("Multiply");
                 fsm.RemoveAction("Spawn Antic", 1);
                 fsm.RemoveAction("Spawn Antic", 3);
                 fsm.RemoveAction("Spawn Antic", 5);
@@ -149,7 +151,8 @@ namespace PureZote
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Crew Normal (1)(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                fsm.AddTransition("Dormant", "FINISHED", "Multiply");
+                fsm.SendEvent("SPAWN");
+                fsm.SetState("Multiply");
                 fsm.RemoveAction("Spawn Antic", 1);
                 fsm.RemoveAction("Spawn Antic", 3);
                 fsm.AddCustomAction("Spawn Antic", () => { fsm.SendEvent("FINISHED"); });
@@ -165,7 +168,8 @@ namespace PureZote
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Ordeal Zoteling(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                fsm.AddTransition("Dormant", "FINISHED", "Ball");
+                fsm.SendEvent("SPAWN");
+                fsm.SetState("Ball");
                 fsm.RemoveAction("Ball", 2);
                 fsm.AddCustomAction("Reset", () =>
                 {
@@ -177,7 +181,8 @@ namespace PureZote
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Salubra(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                fsm.AddTransition("Dormant", "FINISHED", "Appear");
+                fsm.SendEvent("SPAWN");
+                fsm.SetState("Appear");
                 fsm.RemoveAction("Appear", 3);
                 fsm.RemoveAction("Appear", 5);
                 fsm.RemoveAction("Idle", 0);
@@ -196,7 +201,8 @@ namespace PureZote
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Fluke(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                fsm.AddTransition("Dormant", "FINISHED", "Pos");
+                fsm.SendEvent("SPAWN");
+                fsm.SetState("Pos");
                 fsm.InsertCustomAction("Pos", () =>
                 {
                     fsm.FsmVariables.GetFsmFloat("X Pos").Value = fsm.gameObject.transform.position.x;
@@ -207,7 +213,8 @@ namespace PureZote
             else if (fsm.gameObject.scene.name == "GG_Grey_Prince_Zote" && fsm.gameObject.name == "Zote Thwomp(Clone)" && fsm.FsmName == "Control")
             {
                 Log("Upgrading FSM: " + fsm.gameObject.name + " - " + fsm.FsmName + ".");
-                fsm.AddTransition("Dormant", "FINISHED", "Set Pos");
+                fsm.SendEvent("SPAWN");
+                fsm.SetState("Set Pos");
                 fsm.InsertCustomAction("Set Pos", () =>
                 {
                     fsm.FsmVariables.GetFsmFloat("X Pos").Value = fsm.gameObject.transform.position.x;
@@ -254,6 +261,7 @@ namespace PureZote
                         minion.transform.SetScaleX(0.5f * minion.transform.localScale.x);
                         minion.transform.SetScaleY(0.5f * minion.transform.localScale.y);
                         minion.transform.SetScaleZ(0.5f * minion.transform.localScale.z);
+                        Object.Destroy(minion.transform.Find("Enemy Crusher").gameObject);
                     }
                     else
                     {

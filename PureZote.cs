@@ -190,6 +190,7 @@ namespace PureZote
                     LogDebug("Spitting.");
                     var zoteling = fsm1.FsmVariables.FindFsmGameObject("Zoteling").Value;
                     zoteling.GetComponent<Renderer>().enabled = false;
+                    UnityEngine.Object.Destroy(zoteling.GetComponent<DamageHero>());
                     GameObject minion;
                     Minions.Settings settings;
                     if (minions.variables.isSpittingHardMinions)
