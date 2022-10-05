@@ -7,6 +7,22 @@ using Vasi;
 
 namespace PureZote
 {
+    class SpawnHelper : MonoBehaviour
+    {
+        float time = 0;
+        void Update()
+        {
+            var fsm = gameObject.GetComponent<PlayMakerFSM>();
+            if (fsm.ActiveStateName == "Spawn Antic")
+            {
+                time += Time.deltaTime;
+                if (time > 1 / 30.0)
+                {
+                    fsm.SetState("Activate");
+                }
+            }
+        }
+    }
     public class Minions
     {
         public class Settings
@@ -110,6 +126,7 @@ namespace PureZote
                 fsm.RemoveAction("Spawn Antic", 1);
                 fsm.RemoveAction("Spawn Antic", 3);
                 fsm.AddCustomAction("Spawn Antic", () => fsm.SendEvent("FINISHED"));
+                fsm.gameObject.AddComponent<SpawnHelper>();
                 fsm.RemoveAction("Tumble Out", 2);
                 fsm.RemoveAction("Death", 0);
                 fsm.AddCustomAction("Death Reset", () =>
@@ -128,6 +145,7 @@ namespace PureZote
                 fsm.RemoveAction("Spawn Antic", 3);
                 fsm.RemoveAction("Spawn Antic", 5);
                 fsm.AddCustomAction("Spawn Antic", () => fsm.SendEvent("FINISHED"));
+                fsm.gameObject.AddComponent<SpawnHelper>();
                 fsm.RemoveAction("Tumble Out", 2);
                 fsm.RemoveAction("Dr", 1);
                 fsm.AddCustomAction("Dr", () =>
@@ -156,6 +174,7 @@ namespace PureZote
                 fsm.RemoveAction("Spawn Antic", 1);
                 fsm.RemoveAction("Spawn Antic", 3);
                 fsm.AddCustomAction("Spawn Antic", () => { fsm.SendEvent("FINISHED"); });
+                fsm.gameObject.AddComponent<SpawnHelper>();
                 fsm.RemoveAction("Tumble Out", 2);
                 fsm.RemoveAction("Death", 0);
                 fsm.AddCustomAction("Death Reset", () =>
@@ -236,7 +255,7 @@ namespace PureZote
                 fsm.AddCustomAction("Set Pos", () =>
                 {
                     int index = variables.roarType;
-                    if (index == 0 || GameObject.Find("Zote Crew Fat (1)(Clone)") != null || GameObject.Find("Zote Salubra(Clone)"))
+                    if (index == 0)
                     {
                         return;
                     }
