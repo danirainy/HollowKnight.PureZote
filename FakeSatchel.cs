@@ -1,11 +1,12 @@
 using Vasi;
+using SFCore;
 
 
 public static class FakeSatchel
 {
     public static void InsertCustomAction(this PlayMakerFSM fsm, string state,System.Action action,int index)
     {
-        fsm.GetState(state).InsertMethod(index, action);
+        SFCore.Utils.FsmUtil.InsertMethod(fsm,state,action,index);
     }
     public static void AddCustomAction(this PlayMakerFSM fsm, string state, System.Action action)
     {

@@ -79,6 +79,9 @@
     <Reference Include="Vasi">
       <HintPath>C:/Program Files (x86)/Steam/steamapps/common/Hollow Knight/hollow_knight_Data/Managed\Mods/Vasi.dll</HintPath>
     </Reference>
+    <Reference Include="SFCore">
+      <HintPath>C:/Program Files (x86)/Steam/steamapps/common/Hollow Knight/hollow_knight_Data/Managed\Mods/SFCore.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
