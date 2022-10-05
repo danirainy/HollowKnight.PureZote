@@ -16,7 +16,7 @@ public static class FakeSatchel
     {
         fsm.GetState(state).RemoveAction(index);
     }
-    public static void AddTransition(this PlayMakerFSM fsm, string from, string e,string to)
+    public static void AddTransition(this PlayMakerFSM fsm, string from, string e, string to)
     {
         fsm.GetState(from).AddTransition(e, to);
     }
